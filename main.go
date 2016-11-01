@@ -131,7 +131,7 @@ func main() {
 		case *IssueEvent:
 			{
 				issue := event.(*IssueEvent)
-				if issue.action == "open" || issue.action == "reopen" {
+				if issue.action == "open" || issue.action == "reopen" || issue.action == "created" {
 					for_each_duty(func(to string) {
 						send(fmt.Sprintf("[GITHUB ISSUE] %s %s", issue.title, issue.action),
 							fmt.Sprintf(`Today is on your duty to handle github issues,
