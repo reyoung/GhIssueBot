@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/bmatsuo/go-jsontree"
 	"github.com/jessevdk/go-flags"
-	"github.com/reyoung/hookserve/hookserve"
+	"github.com/reyoung/github_hook"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -99,9 +99,9 @@ func parseOpts() *Options {
 
 func main() {
 	opts := parseOpts()
-	server := hookserve.NewServer()
-	server.CustomEventHandler["issues"] = on_issue_hook
-	server.CustomEventHandler["issue_comment"] = on_issue_comment_hook
+	server := github_hook.NewServer()
+	server.EventHandler["issues"] = on_issue_hook
+	server.EventHandler["issue_comment"] = on_issue_comment_hook
 	server.Port = opts.Http.Port
 	if opts.SecretCode != nil {
 		server.Secret = *opts.SecretCode
@@ -126,8 +126,6 @@ func main() {
 
 	for event := range server.Events {
 		switch event.(type) {
-		case hookserve.Event:
-			log.Println("Hookserve Event Recieved")
 		case *IssueEvent:
 			{
 				issue := event.(*IssueEvent)
